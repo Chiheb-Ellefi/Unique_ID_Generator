@@ -56,6 +56,6 @@ Send a GET request to "http://localhost:80/generate-id"
 
 ## Performance 
 Using Lua for counter incrementation is significantly faster and more convenient than using the Node.js Redis client due to the following reasons:
-. **Atomicity**: Lua scripts in Redis execute atomically, ensuring consistent and reliable counter increments.
-. **Speed**: Lua scripts run directly on the Redis server, reducing the latency compared to round-trips between the application server and Redis.
-. **Efficiency**: Preloading the script and using EVALSHA minimizes the overhead of script loading with every request.
+- **Atomicity**: Lua scripts in Redis execute atomically, ensuring consistent and reliable counter increments.
+-  **Speed**: Lua scripts run directly on the Redis server, reducing the latency compared to round-trips between the application server and Redis.
+-  **Efficiency**: Preloading the script and using EVALSHA minimizes the overhead of script loading with every request.
