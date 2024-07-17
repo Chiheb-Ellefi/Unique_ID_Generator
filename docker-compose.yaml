@@ -1,0 +1,101 @@
+version: "3.8"
+
+services:
+  server1:
+    image: uid_gen
+    container_name: server1
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    environment:
+      DATACENTER_ID: 1
+      MACHINE_ID: 1
+    networks:
+      mynetwork:
+        ipv4_address: 172.18.0.2
+    depends_on:
+      - redis
+
+  server2:
+    image: uid_gen
+    container_name: server2
+    ports:
+      - "3001:3000"
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    environment:
+      DATACENTER_ID: 1
+      MACHINE_ID: 2
+    networks:
+      mynetwork:
+        ipv4_address: 172.18.0.4
+    depends_on:
+      - redis
+
+  server3:
+    image: uid_gen
+    container_name: server3
+    ports:
+      - "3002:3000"
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    environment:
+      DATACENTER_ID: 2
+      MACHINE_ID: 1
+    networks:
+      mynetwork:
+        ipv4_address: 172.18.0.5
+    depends_on:
+      - redis
+
+  server4:
+    image: uid_gen
+    container_name: server4
+    ports:
+      - "3003:3000"
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    environment:
+      DATACENTER_ID: 2
+      MACHINE_ID: 2
+    networks:
+      mynetwork:
+        ipv4_address: 172.18.0.6
+    depends_on:
+      - redis
+
+  Lb-1:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    networks:
+      mynetwork:
+        ipv4_address: 172.18.0.10
+    depends_on:
+      - server1
+      - server2
+      - server3
+      - server4
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    networks:
+      mynetwork:
+        ipv4_address: 172.18.0.3
+
+networks:
+  mynetwork:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.18.0.0/16
